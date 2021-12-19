@@ -1,0 +1,33 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.praktika'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.6.1'
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.6.1'
+	implementation 'org.springframework.boot:spring-boot-starter-mustache'
+	implementation 'org.springframework.security:spring-security-test:5.5.1'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.1'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:2.6.1'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.6.1'
+	implementation 'org.hibernate:hibernate-core:5.6.1.Final'
+	implementation 'org.hibernate:hibernate-core-jakarta:5.6.1.Final'
+	implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.6.1'
+	runtimeOnly 'org.postgresql:postgresql:42.3.1'
+	testImplementation ('org.springframework.boot:spring-boot-starter-test:2.6.1')
+}
+
+test {
+	useJUnitPlatform()
+}

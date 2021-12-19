@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MediaViewer</title>
+
+    <style>
+   body {
+    margin: 1em;
+
+   }
+input[type='file'] {
+
+  margin-bottom: 0.3%;
+
+}
+input[type='submit'] {
+background: black;
+color: white;
+}
+
+  </style>
+
+</head>
+<body>
+
+<div><h2>Список файлов</h2></div>
+
+<div th:switch="${users}">
+
+<div th:case="*">
+<table>
+    <thead>
+    <tr>
+        <th>idFile</th>
+        <th>FileName</th>
+        <th>UploadDate</th>
+        <th>Path</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="x : ${files}">
+        <th th:text="${x.idFile}"></th>
+        <th th:text="${x.FileName}"></th>
+        <th th:text="${x.UploadDate}"></th>
+        <th th:text="${x.Path}"></th>
+
+
+        <td><a th:href="@{file-delete/{id}(id=${x.idFile})}">Delete</a></td>
+        <td><a th:href="@{file-view/{name}+{id}(name=${x.FileName}, id=${x.idFile})}">View</a></td>
+<!--        <td><a th:href="@{file-download/{id}(id=${x.idFile})}">Download</a></td>-->
+    </tr>
+
+    </tbody>
+</table>
+</div>
+</div>
+
+
+
+<div><h3>Добавить файл</h3></div>
+<div>
+        <form method="post" enctype="multipart/form-data">
+
+            <input type="file" name="file" id="upload" required>
+            <div><input type="submit" value="Загрузить"></div>
+        </form>
+</div>
+
+
+
+
+<!--<div>-->
+<!--    <#if mediaf.FileName??>-->
+<!--        <img src="C:/Users/HDMI/Desktop/BdMedia/{mediafiles.FileName}">-->
+<!--    </#if>-->
+<!--</div>-->
+
+
+
+</body>
+</html>
