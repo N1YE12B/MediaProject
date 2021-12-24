@@ -39,7 +39,7 @@ public class FileController {
 
     @GetMapping("/media")
     public String GetAllUsers(Model model) {
-//        return ResponseEntity.ok(this.mediaFilesRepo.findAll());
+
 
         Iterable<MediaFiles> mediafiles = mediaFilesRepo.findAll();
         model.addAttribute("media", mediafiles);
@@ -59,8 +59,7 @@ public class FileController {
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
-//        String uuidFile = UUID.randomUUID().toString();
-//        String resultFileName = uuidFile + "." + file.getOriginalFilename();
+
 
             String resultFileName = file.getOriginalFilename();
 
@@ -118,11 +117,10 @@ public class FileController {
     }
 
 
-//        return "redirect:/media";
 
 
     @GetMapping("file-view/{name}+{id}")
-    public void downloadFile3(HttpServletResponse resonse, @PathVariable("name") String fileName, @PathVariable("id") Integer id) throws IOException {
+    public void viewFile(HttpServletResponse resonse, @PathVariable("name") String fileName, @PathVariable("id") Integer id) throws IOException {
 
 
         File file = new File(pathFile + "/" + fileName);
