@@ -3,22 +3,19 @@ package com.praktika.MediaProject.Controllers;
 import com.praktika.MediaProject.Model.MediaFiles;
 import com.praktika.MediaProject.Repository.MediaFilesRepo;
 import com.praktika.MediaProject.Servise.FileServise;
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 public class FileController {
@@ -26,6 +23,9 @@ public class FileController {
     private final MediaFilesRepo mediaFilesRepo;
 
     private final FileServise fileServise;
+
+
+
 
     @Value("${upload.path}")
     private String pathFile;
@@ -48,18 +48,15 @@ public class FileController {
         model.addAttribute("files", rows);
 
 
-
         return "media";
     }
 
     @PostMapping("/media")
-    public String add(@RequestParam Map<String ,Object> model, @RequestParam("file") MultipartFile file) throws IOException {
+    public String add(@RequestParam Map<String, Object> model, @RequestParam("file") MultipartFile file) throws IOException {
         MediaFiles mediaFiles = new MediaFiles();
-        if(file != null)
-        {
+        if (file != null) {
             File uploadDir = new File(pathFile);
-            if(!uploadDir.exists())
-            {
+            if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
 //        String uuidFile = UUID.randomUUID().toString();
@@ -67,7 +64,7 @@ public class FileController {
 
             String resultFileName = file.getOriginalFilename();
 
-            file.transferTo(new File(pathFile + "/"+ resultFileName));
+            file.transferTo(new File(pathFile + "/" + resultFileName));
 
 
             mediaFiles.setFileName(resultFileName);
@@ -82,29 +79,70 @@ public class FileController {
     }
 
     @GetMapping("file-delete/{id}")
-    public String deleteFile(@PathVariable("id") Integer id){
+    public String deleteFile(@PathVariable("id") Integer id) {
         fileServise.deleteByID(id);
         return "redirect:/media";
     }
 
-    @GetMapping("file-view/{name}+{id}")
-    public String viewFile(@PathVariable("name") String name, @PathVariable("id") Integer id ,Model model){
-
-        model.addAttribute("fname",name);
-        Iterable<MediaFiles> mediafiles = mediaFilesRepo.findAll();
-        String fpath = pathFile + "/"+name;
-
-
-        model.addAttribute("directory", fpath);
-        model.addAttribute("media",mediafiles);
-        return "fileview";
-    }
-
-//    @GetMapping("file-download/{id}")
-//    public String downloadFile(@PathVariable("id") Integer id){
-//        fileServise.deleteByID(id);
-//        return "redirect:/media";
+    //Alt. view.
+//    @GetMapping("file-view/{name}+{id}")
+//    public String viewFile(@PathVariable("name") String name, @PathVariable("id") Integer id ,Model model){
+//
+//        String fpath = "/UploadFiles" + "/" + name;
+//        model.addAttribute("directory", fpath);
+//
+//        return "fileview";
 //    }
 
 
+    @GetMapping("file-download/{name}-download")
+    public void downloadFile3(HttpServletResponse resonse, @PathVariable("name") String fileName) throws IOException {
+
+
+        File file = new File(pathFile + "/" + fileName);
+
+
+        resonse.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
+        resonse.setContentLength((int) file.length());
+
+        BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(file));
+        BufferedOutputStream outStream = new BufferedOutputStream(resonse.getOutputStream());
+
+        byte[] buffer = new byte[1024];
+        int bytesRead = 0;
+        while ((bytesRead = inStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+        outStream.flush();
+        inStream.close();
+    }
+
+
+//        return "redirect:/media";
+
+
+    @GetMapping("file-view/{name}+{id}")
+    public void downloadFile3(HttpServletResponse resonse, @PathVariable("name") String fileName, @PathVariable("id") Integer id) throws IOException {
+
+
+        File file = new File(pathFile + "/" + fileName);
+
+
+        BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(file));
+        BufferedOutputStream outStream = new BufferedOutputStream(resonse.getOutputStream());
+
+        byte[] buffer = new byte[1024];
+        int bytesRead = 0;
+        while ((bytesRead = inStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+        outStream.flush();
+        inStream.close();
+    }
+
 }
+
+
+
+
+

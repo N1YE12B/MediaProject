@@ -24,6 +24,8 @@ color: white;
 </head>
 <body>
 
+
+
 <div><h2>Список файлов</h2></div>
 
 <div th:switch="${users}">
@@ -49,7 +51,7 @@ color: white;
 
         <td><a th:href="@{file-delete/{id}(id=${x.idFile})}">Delete</a></td>
         <td><a th:href="@{file-view/{name}+{id}(name=${x.FileName}, id=${x.idFile})}">View</a></td>
-<!--        <td><a th:href="@{file-download/{id}(id=${x.idFile})}">Download</a></td>-->
+       <td><a th:href="@{file-download/{name}-download(name=${x.FileName})}">Download</a></td>
     </tr>
 
     </tbody>
