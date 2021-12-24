@@ -95,7 +95,7 @@ public class FileController {
 
 
     @GetMapping("file-download/{name}-download")
-    public void downloadFile3(HttpServletResponse resonse, @PathVariable("name") String fileName) throws IOException {
+    public void downloadFile(HttpServletResponse resonse, @PathVariable("name") String fileName) throws IOException {
 
 
         File file = new File(pathFile + "/" + fileName);
